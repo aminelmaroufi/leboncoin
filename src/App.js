@@ -1,26 +1,72 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { StyleSheet, css } from "aphrodite";
+import ReduxToastr, { toastr } from "react-redux-toastr";
+import { connect } from "react-redux";
+import Lists from "./components/Lists";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const mapStateToProps = (state, ownProps) => {
+  return {
+    isFetching: state.auth.fetching,
+    isLoggedIn: state.auth.isLoggedIn,
+    error: state.auth.error,
+    success: state.auth.success,
+    message: state.auth.message
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+
+class App extends Component {
+  componentDidUpdate(prevProps) {
+    const { error, success, message } = this.props;
+    if (success) toastr.success("Success Operation", message);
+    else if (error) toastr.error("Error", message);
+  }
+
+  render() {
+    return (
+      <div>
+        <div className="header">
+          <div className="searchContainer">
+            <input
+              className="searchInput"
+              data-test-id="header-search-input"
+              type="search"
+            />
+            <i className="fa fa-search"></i>
+          </div>
+          <div className="logo-container">
+            <img
+              width="200px"
+              height="20px"
+              src={require("./assets/trello.svg")}
+              alt=""
+            />
+          </div>
+        </div>
+        <h3 className={css(styles.title)}>Tableau Reezocar</h3>
+        <Lists />
+        <ReduxToastr
+          timeOut={3000}
+          newestOnTop={false}
+          position="top-right"
+          transitionIn="fadeIn"
+          transitionOut="fadeOut"
+          progressBar
+          closeOnToastrClick
+        />
+      </div>
+    );
+  }
 }
 
-export default App;
+const styles = StyleSheet.create({
+  title: {
+    color: "#fff",
+    margin: 10
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

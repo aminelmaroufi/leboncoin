@@ -1,13 +1,299 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: #0079bf;
+}
+.header {
+  height: 40px;
+  width: "100%";
+  background-color: #026aa7;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.searchContainer {
+  position: "relative" !important;
+}
+
+.searchContainer .searchInput {
+  background-color: hsla(0, 0%, 100%, 0.3);
+  border-radius: 3px;
+  border: none;
+  box-shadow: none;
+  box-sizing: border-box;
+  color: hsla(0, 0%, 100%, 0.5);
+  float: left;
+  font-size: 13px;
+  height: 32px;
+  line-height: 19px;
+  margin: 0;
+  margin-top: 3px;
+  margin-left: 5px;
+  outline: none;
+  padding-left: 8px;
+  padding-right: 30px;
+  transition: width 0.15s;
+  width: 180px;
+}
+
+.fa.fa-search {
+  color: #fff;
+  position: relative;
+  top: 8px;
+  right: 25px;
+}
+
+.addNav {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.addBtn {
+  border-radius: 3px;
+  border: 0;
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
+    Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
+  text-decoration: none;
+  align-items: center;
+  background-color: hsla(0, 0%, 100%, 0.3);
+  box-shadow: none;
+  color: #fff;
+  display: flex;
+  font-weight: 700;
+  height: 32px;
+  line-height: 32px;
+  margin: 0 4px 0 0;
+  padding: 0;
+  transition: 0.1s ease;
+  white-space: nowrap;
+}
+_1iYprMLTeGpyW9 {
+  color: #fff !important;
+}
+._2hgn5meZL7bJdx {
+  font-size: 20px;
+}
+_2hgn5meZL7bJdx,
+.lAz6zCcJVJePNN {
+  height: 32px;
+  line-height: 32px;
+  width: 32px;
+}
+._2BQG4yPMt5s_hu {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: inline-block;
+  font-family: trellicons;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: bottom;
+  color: #42526e;
+}
+
+.logo-container {
+  display: block;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  top: 5px;
+}
+
+.addListBtn {
+  border-radius: 3px;
+  border: 0;
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
+    Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
+  text-decoration: none;
+  align-items: center;
+  background-color: hsla(0, 0%, 100%, 0.3);
+  box-shadow: none;
+  color: #fff;
+  display: flex;
+  font-weight: 700;
+  height: 32px;
+  width: 120px;
+  line-height: 32px;
+  margin: 0 0 0 10px;
+  padding: 0;
+  transition: 0.1s ease;
+  white-space: nowrap;
+}
+
+.btn-add-title {
+  transition: 0.1s ease;
+  overflow: hidden;
+  padding: 0 8px 0 2px;
+  max-width: 150px;
+  font-size: 12px;
+}
+
+.fa.fa-plus-icon-btn {
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.fa-plus-icon-add {
+  font-size: 14px;
+  margin-left: 3px;
+  margin-right: 8px;
+}
+
+.add-list {
+  width: 400px !important;
+}
+
+.ReactModal__Content {
+  border: 0px !important;
+  background-color: transparent !important;
+}
+
+.ReactModal__Overlay {
+  z-index: 9999;
+  background-color: rgba(90, 90, 90, 0.3) !important;
+}
+
+.fileContainer {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.modal-dialog .form-control {
+  height: initial !important;
+  padding: 6px !important;
+}
+
+.error-message {
+  font-size: 12px;
+  color: red;
+}
+
+list-wrapper:first-child {
+  margin-left: 8px;
+}
+
+.list-wrapper {
+  width: 272px;
+  margin: 0 4px;
+  height: 100%;
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+.list {
+  background-color: #ebecf0;
+  border-radius: 3px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  position: relative;
+  white-space: normal;
+}
+
+.list-header {
+  flex: 0 0 auto;
+  padding: 10px 8px;
+  position: relative;
+  min-height: 20px;
+}
+
+.list-header-target {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.list-header-name-assist {
+  display: none;
+}
+.list-header textarea {
+  resize: none;
+}
+
+textarea.mod-list-name {
+  background: transparent;
+  border-radius: 3px;
+  box-shadow: none;
+  font-weight: 600;
+  margin: -4px 0;
+  height: 20px;
+  min-height: 20px;
+  padding: 4px 8px;
+  resize: none;
+  max-height: 256px;
+}
+textarea {
+  resize: vertical;
+  width: 100%;
+}
+.iframe-input,
+input:not([type="file"]),
+textarea {
+  background-color: #fafbfc;
+  border: none;
+  box-shadow: inset 0 0 0 2px #dfe1e6;
+  color: #172b4d;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  border-radius: 3px;
+  display: block;
+  line-height: 20px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  transition-property: background-color, border-color, box-shadow;
+  transition-duration: 85ms;
+  transition-timing-function: ease;
+}
+
+.card-composer-container {
+  min-height: 38px;
+  max-height: 38px;
+  display: flex;
+  justify-content: space-between;
+}
+.open-card-composer {
+  border-radius: 3px;
+  color: #5e6c84;
+  display: block;
+  flex: 1 0 auto;
+  margin: 2px 0 8px 8px;
+  padding: 4px 8px;
+  position: relative;
+  text-decoration: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.open-card-composer .icon-add {
+  color: #6b778c;
+  margin-right: 2px;
+}
+.open-card-composer {
+  border-radius: 3px;
+  color: #5e6c84;
+  display: block;
+  flex: 1 0 auto;
+  margin: 2px 0 8px 8px;
+  padding: 4px 8px;
+  position: relative;
+  text-decoration: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.icon-delete {
+  position: absolute;
+  top: 10px;
+  right: 5px;
 }
