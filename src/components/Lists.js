@@ -202,8 +202,9 @@ class Lists extends Component {
   };
 
   _handleKeyDownOnAddCard = e => {
+    const { selectedList } = this.state;
     if (e.key === "Enter") {
-      this.addCard();
+      this.addCard(selectedList);
     }
   };
 
@@ -395,7 +396,12 @@ class Lists extends Component {
 
                     <span
                       className="js-add-a-card hide"
-                      onClick={() => this.setState({ showAddCardModal: true })}
+                      onClick={() =>
+                        this.setState({
+                          showAddCardModal: true,
+                          selectedList: list
+                        })
+                      }
                     >
                       Ajouter une carte
                     </span>
