@@ -39,7 +39,7 @@ function* add_list(action) {
     yield all([
       put({
         type: ActionTypes.SUCCESS_OPERATION,
-        message: "List added successfully"
+        message: action.messageType
       }),
       yield put({
         type: ActionTypes.ADD_LIST_SUCCESS,

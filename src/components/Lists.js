@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import Modal from "react-modal";
 import { StyleSheet, css } from "aphrodite";
@@ -18,7 +19,9 @@ const customStyles = {
 const mapStateToProps = (state, ownProps) => {
   return {
     lists: state.dash.lists,
-    success: state.auth.success
+    success: state.auth.success,
+    MESSAGE: state.dash.message,
+    fetching: state.auth.fetching
   };
 };
 
@@ -27,8 +30,8 @@ const mapDispatchToProps = dispatch => {
     onGetLists: () => {
       dispatch(getLists());
     },
-    onAddList: lists => {
-      dispatch(addList(lists));
+    onAddList: (lists, type) => {
+      dispatch(addList(lists, type));
     },
     ondeleteList: lists => {
       dispatch(deleteList(lists));
@@ -42,39 +45,70 @@ class Lists extends Component {
     this.state = {
       showAddListModal: false,
       showDeleteModal: false,
+      showAddCardModal: false,
+      showDeleteCardModal: false,
+      showCardDetailsModal: false,
       list: {
         name: "",
-        position: ""
+        position: "",
+        cards: []
+      },
+      card: {
+        _id: 0,
+        description: "",
+        title: ""
       },
       selectedList: null,
+      selectedCard: null,
       errorMessages: {
         name: {
           valid: null,
           message: ""
-        },
-        position: {
-          valid: null,
-          message: ""
         }
       },
-      isValid: false
+      isValid: false,
+      showMenu: false
     };
+    this._handleKeyDown.bind(this);
+    this.handleDocumentClick.bind(this);
+    this._handleKeyDownOnAddCard.bind(this);
   }
 
   componentDidMount() {
     this.props.onGetLists();
+    window.root.addEventListener("click", this.handleDocumentClick);
   }
+
+  handleDocumentClick = evt => {
+    const area = ReactDOM.findDOMNode(this.refs.area);
+
+    if (area && !area.contains(evt.target)) {
+      this.setState({ showAddListModal: false });
+    }
+  };
 
   componentWillReceiveProps(newProps) {
     const { success } = newProps;
-    let { list } = this.state;
+    let { list, card } = this.state;
 
     if (success) {
       list = {
         name: "",
         position: ""
       };
-      this.setState({ list, showAddListModal: false, showDeleteModal: false });
+      card = {
+        _id: 0,
+        title: "",
+        description: ""
+      };
+      this.setState({
+        list,
+        card,
+        showAddListModal: false,
+        showDeleteModal: false,
+        showAddCardModal: false,
+        showDeleteCardModal: false
+      });
     }
   }
 
@@ -86,6 +120,12 @@ class Lists extends Component {
     let { list } = this.state;
     list[key] = value;
     this.setState({ list }, () => this.validateFields(key));
+  };
+
+  onUpdateCardField = (key, value) => {
+    let { card } = this.state;
+    card[key] = value;
+    this.setState({ card });
   };
 
   /**
@@ -107,26 +147,11 @@ class Lists extends Component {
         }
         break;
       }
-      case "position": {
-        const isValid = /^\d+(\.\d{1,2})?$/.test(list.position);
-        if (!list.position) {
-          errorMessages.position.valid = false;
-          errorMessages.position.message = "List position is required !";
-        } else if (!isValid) {
-          errorMessages.position.valid = false;
-          errorMessages.position.message = "position value is not valid !";
-        } else {
-          errorMessages.position.valid = true;
-          errorMessages.position.message = "";
-        }
-        break;
-      }
       default:
         return;
     }
 
-    if (errorMessages.name.valid && errorMessages.position.valid)
-      isValid = true;
+    if (errorMessages.name.valid) isValid = true;
     else isValid = false;
 
     this.setState({ errorMessages, isValid });
@@ -137,14 +162,16 @@ class Lists extends Component {
    * Add new list
    */
   addList = () => {
-    let { list } = this.state;
+    let { list, isValid } = this.state;
     let { lists } = this.props;
 
-    list = { ...list, _id: lists.length + 1 };
+    if (isValid) {
+      list = { ...list, _id: lists.length, cards: [] };
 
-    lists = [...lists, list];
+      lists = [...lists, list];
 
-    this.props.onAddList(lists);
+      this.props.onAddList(lists, "List added successfully");
+    }
   };
 
   /**
@@ -168,25 +195,69 @@ class Lists extends Component {
     this.props.ondeleteList(lists);
   };
 
+  _handleKeyDown = e => {
+    if (e.key === "Enter") {
+      this.addList();
+    }
+  };
+
+  _handleKeyDownOnAddCard = e => {
+    if (e.key === "Enter") {
+      this.addCard();
+    }
+  };
+
+  closeForm = () => {
+    this.setState({ showAddListModal: false, showMenu: false });
+  };
+
+  componentWillUnmount() {
+    window.root.removeEventListener("click", this.handleDocumentClick);
+  }
+
+  addCard = list => {
+    let { card } = this.state;
+    let { lists } = this.props;
+    if (card.title) {
+      card = { ...card, _id: list.cards.length };
+      list.cards.push(card);
+      this.props.onAddList(lists, "Card added successfully");
+    }
+  };
+
+  deleteCard = () => {
+    const { selectedCard, selectedList } = this.state;
+    let { lists } = this.props;
+    selectedList.cards.filter(card => card._id === selectedCard._id);
+    lists.filter(list => {
+      if (list._id === selectedList._id) return selectedList;
+      return list;
+    });
+    this.props.onAddList(lists, "Card removed successfully");
+  };
+
   render() {
     const {
       showAddListModal,
       showDeleteModal,
-      isValid,
-      errorMessages,
+      showCardDetailsModal,
       list,
-      selectedList
+      selectedList,
+      selectedCard,
+      showAddCardModal,
+      showDeleteCardModal,
+      card
     } = this.state;
     const { lists } = this.props;
     return (
       <div>
-        <button
+        {/* <button
           className="addListBtn"
           onClick={() => this.setState({ showAddListModal: true })}
         >
           <i className="fa fa-plus fa-plus-icon-btn"></i>
           <span className="btn-add-title">Ajouter une liste</span>
-        </button>
+        </button> */}
 
         {lists.map(list => (
           <div className="js-list list-wrapper" key={list._id}>
@@ -211,24 +282,129 @@ class Lists extends Component {
                   defaultValue={list.name}
                 ></textarea>
                 <div className="list-header-extras">
-                  <i
-                    className="fa fa-trash icon-delete"
-                    onClick={() => this.selectList(list)}
-                  ></i>
+                  {/* #card title */}
+                  {list.cards.map(card => (
+                    <div
+                      className="list-card-details js-card-details"
+                      onClick={() =>
+                        this.setState({
+                          showCardDetailsModal: true,
+                          selectedList: list,
+                          selectedCard: card
+                        })
+                      }
+                    >
+                      <div className="list-card-labels js-card-labels">
+                        <span
+                          className="card-label card-label-red mod-card-front"
+                          title="BUG"
+                        >
+                          <span className="label-text">BUG</span>
+                        </span>
+                      </div>
+                      <span className="list-card-title js-card-name">
+                        <span className="card-short-id hide">{card.title}</span>
+                      </span>
+                      <div className="badges">
+                        <span className="js-badges">
+                          <div
+                            className="badge is-icon-only"
+                            title="Vous suivez cette carte."
+                          >
+                            <span className="badge-icon icon-sm icon-subscribe"></span>
+                          </div>
+                        </span>
+                        <span className="custom-field-front-badges js-custom-field-badges">
+                          <span></span>
+                        </span>
+                        <span className="js-plugin-badges">
+                          <span></span>
+                        </span>
+                      </div>
+                      <div className="list-card-members js-list-card-members">
+                        <div
+                          className="member js-member-on-card-menu"
+                          data-idmem="562df4a436f8718f35b9799b"
+                        >
+                          <span
+                            className="member-gold-badge"
+                            title="Ce membre a Trello Gold."
+                            aria-label="Ce membre a Trello Gold."
+                          ></span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {/* #card titile end */}
+
+                  <a className="list-header-extras-menu dark-hover js-open-list-menu icon-sm icon-overflow-menu-horizontal">
+                    <i
+                      className="fa fa-ellipsis-h fa-plus-icon-btn"
+                      onClick={() => this.selectList(list)}
+                    ></i>
+                    <div></div>
+                  </a>
+
+                  {/* add carte  */}
+                  <div className="list-card-details u-clearfix">
+                    <div className="list-card-labels u-clearfix js-list-card-composer-labels"></div>
+                    {showAddCardModal && (
+                      <div>
+                        <textarea
+                          className="list-card-composer-textarea js-card-title"
+                          placeholder="Saisissez un titre pour cette carte…"
+                          onChange={e =>
+                            this.onUpdateCardField("title", e.target.value)
+                          }
+                          onKeyDown={this._handleKeyDownOnAddCard}
+                          value={card.title}
+                          style={{
+                            overflow: "hidden",
+                            overflowWrap: "break-word",
+                            height: "60px",
+                            padding: "10px"
+                          }}
+                          autoFocus
+                        ></textarea>
+                        <div className="list-card-members js-list-card-composer-members"></div>
+
+                        <div className="list-add-controls u-clearfix">
+                          <input
+                            className="primary mod-list-add-button js-save-edit"
+                            type="submit"
+                            value="Ajouter la carte"
+                            onClick={() => this.addCard(list)}
+                          />
+                          <i
+                            className="fas fa-times icon-lg dark-hover js-cancel-edit"
+                            onClick={() =>
+                              this.setState({ showAddCardModal: false })
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  {/* end */}
                 </div>
               </div>
               <div className="card-composer-container js-card-composer-container">
-                <a
-                  className="open-card-composer js-open-card-composer"
-                  href="#"
-                >
-                  <i className="fa fa-plus icon-add"></i>
-                  <span className="js-add-a-card hide">Ajouter une carte</span>
-                </a>
+                {!showAddCardModal && (
+                  <a className="open-card-composer js-open-card-composer">
+                    <i className="fa fa-plus icon-add"></i>
+
+                    <span
+                      className="js-add-a-card hide"
+                      onClick={() => this.setState({ showAddCardModal: true })}
+                    >
+                      Ajouter une carte
+                    </span>
+                  </a>
+                )}
                 <div className="js-card-templates-button card-templates-button-container dark-background-hover">
                   <div className="js-react-root">
                     <div>
-                      <a role="button" href="#">
+                      <a role="button">
                         <span className="icon-sm icon-template-card dark-background-hover"></span>
                       </a>
                     </div>
@@ -239,11 +415,59 @@ class Lists extends Component {
           </div>
         ))}
 
+        <div
+          className="js-add-list list-wrapper mod-add is-idle"
+          onClick={() => this.setState({ showAddListModal: true })}
+        >
+          <form>
+            {!showAddListModal && (
+              <a className="open-add-list js-open-add-list">
+                <span className="placeholder">
+                  <span className="icon-sm icon-add"></span>
+                  {lists.length
+                    ? "Ajoutez une autre liste"
+                    : "Ajoutez une liste"}
+                </span>
+              </a>
+            )}
+            {showAddListModal && (
+              <div className="add-form" ref="area">
+                <input
+                  className="list-name-input"
+                  type="text"
+                  name="name"
+                  placeholder="Saisissez le titre de la liste…"
+                  value={list.name}
+                  onChange={e => this.onUpdateField("name", e.target.value)}
+                  onKeyDown={this._handleKeyDown}
+                  autoFocus
+                />
+                <div className="list-add-controls u-clearfix">
+                  <input
+                    className="primary mod-list-add-button js-save-edit"
+                    type="submit"
+                    value="Ajouter une liste"
+                    onClick={() => this.addList()}
+                  />
+                  {/* <a
+                    className="fas fa-times icon-lg dark-hover js-cancel-edit"
+                    onClick={() => this.setState({ showAddListModal: false })}
+                  ></a> */}
+                  <i
+                    className="fas fa-times icon-lg dark-hover js-cancel-edit"
+                    onClick={() => this.closeForm()}
+                  />
+                </div>
+              </div>
+            )}
+          </form>
+        </div>
+
         {/* add Modal */}
         <Modal
-          isOpen={showAddListModal}
+          isOpen={showCardDetailsModal}
           style={customStyles}
-          onRequestClose={() => this.setState({ showAddListModal: false })}
+          onRequestClose={() => this.setState({ showCardDetailsModal: false })}
           shouldCloseOnOverlayClick={true}
         >
           <div ref={ref => (this.modalRef = ref)} id="confirmModal">
@@ -251,12 +475,26 @@ class Lists extends Component {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title" id="exampleModalLabel">
-                    Add a new list
+                    Fellewed card
                   </h5>
+                  <br />
+                  {/* title  */}
+                  <div className="window-header-inline-content quiet js-current-list card-title">
+                    <p className="u-inline-block u-bottom">
+                      Dans la liste{" "}
+                      <a href="#" className="js-open-move-from-header">
+                        {selectedList ? selectedList.name : ""}
+                      </a>
+                    </p>
+                  </div>
+                  {/* end title */}
+
                   <button
                     type="button"
                     className="close"
-                    onClick={() => this.setState({ showAddListModal: false })}
+                    onClick={() =>
+                      this.setState({ showCardDetailsModal: false })
+                    }
                   >
                     <span aria-hidden="true">×</span>
                   </button>
@@ -266,43 +504,7 @@ class Lists extends Component {
                     <div className="form-row">
                       <div className="col-md-12">
                         <div className="form-group">
-                          <label htmlFor="inputEmail4">List name</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="inputEmail4"
-                            placeholder="List name"
-                            value={list.name}
-                            onChange={e =>
-                              this.onUpdateField("name", e.target.value)
-                            }
-                            required
-                            autoFocus
-                          />
-                          {!errorMessages.name.valid && (
-                            <span className="error-message">
-                              {errorMessages.name.message}
-                            </span>
-                          )}
-                        </div>
-                        <div className="form-group">
-                          <label htmlFor="inputEmail4">List position</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="inputEmail2"
-                            placeholder="Order timer (Minutes)"
-                            value={list.position}
-                            onChange={e =>
-                              this.onUpdateField("position", e.target.value)
-                            }
-                            required
-                          />
-                          {!errorMessages.position.valid && (
-                            <span className="error-message">
-                              {errorMessages.position.message}
-                            </span>
-                          )}
+                          <label htmlFor="inputEmail4">Description</label>
                         </div>
                       </div>
                     </div>
@@ -312,17 +514,30 @@ class Lists extends Component {
                   <button
                     type="button"
                     className="btn btn-secondary"
-                    onClick={() => this.setState({ showAddListModal: false })}
+                    onClick={() =>
+                      this.setState({ showCardDetailsModal: false })
+                    }
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={() => this.addList()}
-                    disabled={!isValid}
+                    onClick={() => this.followList()}
                   >
-                    Save
+                    follow
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() =>
+                      this.setState({
+                        showCardDetailsModal: false,
+                        showDeleteCardModal: true
+                      })
+                    }
+                  >
+                    Delete
                   </button>
                 </div>
               </div>
@@ -331,7 +546,7 @@ class Lists extends Component {
         </Modal>
         {/** end modal */}
 
-        {/* Set Modal */}
+        {/* Delete List Modal */}
         <Modal
           isOpen={showDeleteModal}
           style={customStyles}
@@ -380,11 +595,72 @@ class Lists extends Component {
           </div>
         </Modal>
         {/** end modal */}
+
+        {/* Delete Card Modal */}
+        <Modal
+          isOpen={showDeleteCardModal}
+          style={customStyles}
+          onRequestClose={() => this.setState({ showDeleteCardModal: false })}
+          shouldCloseOnOverlayClick={true}
+        >
+          <div ref={ref => (this.modalRef = ref)} id="confirmModal">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalLabel">
+                    Delete Card
+                  </h5>
+                  <button
+                    type="button"
+                    className="close"
+                    onClick={() =>
+                      this.setState({ showDeleteCardModal: false })
+                    }
+                  >
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  <p>
+                    Do you want to delete{" "}
+                    {selectedCard !== null ? selectedCard.title : ""} ?
+                  </p>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() =>
+                      this.setState({ showDeleteCardModal: false })
+                    }
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => this.deleteCard()}
+                  >
+                    Yes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
+        {/** end modal */}
       </div>
     );
   }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  adListBgC: {
+    backgroundColor: "red"
+  },
+  adListBgCA: {
+    backgroundColor: "#fff"
+  }
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lists);

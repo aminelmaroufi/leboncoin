@@ -4,9 +4,10 @@ export const getLists = () => ({
   type: ActionTypes.GET_LIST
 });
 
-export const addList = lists => ({
+export const addList = (lists, messageType) => ({
   type: ActionTypes.ADD_LIST,
-  lists
+  lists,
+  messageType
 });
 
 export const deleteList = lists => ({

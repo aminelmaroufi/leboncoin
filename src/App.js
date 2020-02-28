@@ -30,11 +30,7 @@ class App extends Component {
       <div>
         <div className="header">
           <div className="searchContainer">
-            <input
-              className="searchInput"
-              data-test-id="header-search-input"
-              type="search"
-            />
+            <h3 className={css(styles.title)}>Tableau Reezocar</h3>
             <i className="fa fa-search"></i>
           </div>
           <div className="logo-container">
@@ -46,7 +42,6 @@ class App extends Component {
             />
           </div>
         </div>
-        <h3 className={css(styles.title)}>Tableau Reezocar</h3>
         <Lists />
         <ReduxToastr
           timeOut={3000}

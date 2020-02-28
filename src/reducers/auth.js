@@ -13,7 +13,7 @@ export default function reducer(state = initialState, action) {
     case ActionTypes.API_CALL_REQUEST:
       return {
         ...state,
-        // fetching: true,
+        fetching: true,
         error: false,
         success: false,
         message: ""
