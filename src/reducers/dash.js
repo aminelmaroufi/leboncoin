@@ -1,24 +1,14 @@
 import * as ActionTypes from "../utils/types";
 const initialState = {
-  lists: []
+  bookings: [],
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case ActionTypes.SET_LIST:
+    case ActionTypes.SET_BOOKINGS:
       return {
         ...state,
-        lists: action.lists
-      };
-    case ActionTypes.ADD_LIST_SUCCESS:
-      return {
-        ...state,
-        lists: action.lists
-      };
-    case ActionTypes.DELETE_LIST_SUCCESS:
-      return {
-        ...state,
-        lists: action.lists
+        bookings: action.bookings,
       };
     default:
       return state;

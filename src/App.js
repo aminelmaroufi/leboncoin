@@ -1,8 +1,16 @@
 import React, { Component } from "react";
-import { StyleSheet, css } from "aphrodite";
 import ReduxToastr, { toastr } from "react-redux-toastr";
 import { connect } from "react-redux";
-import Lists from "./components/Lists";
+import { css } from "@emotion/core";
+import { DotLoader } from "react-spinners";
+import Bookings from "./components/Bookings";
+
+const override = css`
+  position: absolute;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px);
+  z-index: 999 !important;
+`;
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -10,11 +18,11 @@ const mapStateToProps = (state, ownProps) => {
     isLoggedIn: state.auth.isLoggedIn,
     error: state.auth.error,
     success: state.auth.success,
-    message: state.auth.message
+    message: state.auth.message,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
@@ -26,23 +34,11 @@ class App extends Component {
   }
 
   render() {
+    const { isFetching } = this.props;
+
     return (
       <div>
-        <div className="header">
-          <div className="searchContainer">
-            <h3 className={css(styles.title)}>Tableau Reezocar</h3>
-            <i className="fa fa-search"></i>
-          </div>
-          <div className="logo-container">
-            <img
-              width="200px"
-              height="20px"
-              src={require("./assets/trello.svg")}
-              alt=""
-            />
-          </div>
-        </div>
-        <Lists />
+        <Bookings />
         <ReduxToastr
           timeOut={3000}
           newestOnTop={false}
@@ -52,16 +48,20 @@ class App extends Component {
           progressBar
           closeOnToastrClick
         />
+        {isFetching && (
+          <div className="loader-container">
+            <DotLoader
+              css={override}
+              sizeUnit={"px"}
+              size={100}
+              color={"#000"}
+              loading={true}
+            />
+          </div>
+        )}
       </div>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  title: {
-    color: "#fff",
-    margin: 10
-  }
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

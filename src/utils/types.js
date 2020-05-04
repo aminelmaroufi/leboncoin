@@ -6,10 +6,5 @@ export const SUCCESS_OPERATION = "SUCCESS_OPERATION";
 export const USER_NOT_CONNECTED = "USER_NOT_CONNECTED";
 
 //lists
-export const GET_LIST = "GET_LIST";
-export const SET_LIST = "SET_LIST";
-export const ADD_LIST = "ADD_LIST";
-export const ADD_LIST_SUCCESS = "ADD_LIST_SUCCESS";
-export const ADD_CARD_SUCCESS = "ADD_CARD_SUCCESS";
-export const DELETE_LIST = "DELETE_LIST";
-export const DELETE_LIST_SUCCESS = "DELETE_LIST_SUCCESS";
+export const GET_BOOKINGS = "GET_BOOKINGS";
+export const SET_BOOKINGS = "SET_BOOKINGS";
