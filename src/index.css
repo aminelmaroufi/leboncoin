@@ -12,5 +12,20 @@
 .search-btn {
   background: #6b7692 !important;
   color: rgb(230, 227, 239) !important;
-  top: -35px;
+  right: 150px;
+}
+
+.form_container {
+  float: right;
+  top: 50px;
+  right: 100px;
+}
+
+.input-container {
+  width: 400px;
+  margin: 20px;
+}
+
+.img_container {
+  margin: 20px;
 }
