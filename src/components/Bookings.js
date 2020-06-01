@@ -20,7 +20,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-class Bookings extends Component {
+export class Bookings extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -66,20 +66,22 @@ class Bookings extends Component {
   render() {
     const { query, disabled, selectedBooking } = this.state;
     const { bookings } = this.props;
-    console.log("selectedBooking:", selectedBooking);
     return (
       <div>
         <div>
           {/*  filter */}
           <form className="form_container" style={{ paddingLeft: "20px" }}>
             <div className="" style={{ padding: "15px" }}>
-              <h5 style={{ marginLeft: "25px" }}>Filter bookings by :</h5>
+              <h5 data-testid="form-title" style={{ marginLeft: "25px" }}>
+                Filter bookings by :
+              </h5>
               <div className="align-items-center">
                 <div className="input-container">
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Department"
+                    data-testid="dep-input"
                     value={query.dep}
                     onChange={(e) => this._handleChange("dep", e.target.value)}
                   />
@@ -89,6 +91,7 @@ class Bookings extends Component {
                     type="text"
                     className="form-control"
                     placeholder="Price min"
+                    data-testid="price-min"
                     value={query.price_min}
                     onChange={(e) =>
                       this._handleChange("price_min", e.target.value)
@@ -100,6 +103,7 @@ class Bookings extends Component {
                     type="text"
                     className="form-control"
                     placeholder="Price max"
+                    data-testid="price-max"
                     value={query.price_max}
                     onChange={(e) =>
                       this._handleChange("price_max", e.target.value)
@@ -112,6 +116,7 @@ class Bookings extends Component {
                       className="form-check-input"
                       type="checkbox"
                       id="autoSizingCheck2"
+                      data-testid="furnished-input"
                       checked={query.furnished}
                       onChange={(e) =>
                         this._handleChange("furnished", !query.furnished)
@@ -136,6 +141,7 @@ class Bookings extends Component {
                       margin: "6px 0px",
                       float: "right",
                     }}
+                    data-testid="submit-btn"
                     disabled={disabled}
                     onClick={() => this.search()}
                   >
@@ -145,14 +151,15 @@ class Bookings extends Component {
               </div>
             </div>
           </form>
-          <div className="map_container">
+          <div className="map_container" data-testid="map-container">
             <Map
               center={[48.864716, 2.349014]}
               zoom={12}
               width={600}
               height={400}
             >
-              {bookings.length &&
+              {bookings &&
+                bookings.length &&
                 bookings.map((book) => {
                   return (
                     <Marker

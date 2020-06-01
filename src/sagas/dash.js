@@ -5,7 +5,7 @@ import { getBookings } from "../api/dash";
 /**
  *Get bookings saga
  */
-function* get_bookings(action) {
+export function* get_bookings(action) {
   try {
     yield put({ type: ActionTypes.API_CALL_REQUEST });
     const response = yield call(getBookings, action.params);
