@@ -5,7 +5,9 @@ Object {
   "asFragment": [Function],
   "baseElement": <body>
     <div>
-      <div>
+      <div
+        class="c-container"
+      >
         <div>
           <form
             class="form_container"
@@ -15,12 +17,12 @@ Object {
               class=""
               style="padding: 15px;"
             >
-              <h5
+              <h3
                 data-testid="form-title"
-                style="margin-left: 25px;"
+                style="margin-left: 25px; color: rgb(255, 255, 255);"
               >
                 Filter bookings by :
-              </h5>
+              </h3>
               <div
                 class="align-items-center"
               >
@@ -30,7 +32,7 @@ Object {
                   <input
                     class="form-control"
                     data-testid="dep-input"
-                    placeholder="Department"
+                    placeholder="Department (Ex. Paris...)"
                     type="text"
                     value=""
                   />
@@ -42,8 +44,9 @@ Object {
                     class="form-control"
                     data-testid="price-min"
                     placeholder="Price min"
+                    required=""
                     type="text"
-                    value="0"
+                    value="0€"
                   />
                 </div>
                 <div
@@ -53,8 +56,9 @@ Object {
                     class="form-control"
                     data-testid="price-max"
                     placeholder="Price max"
+                    required=""
                     type="text"
-                    value="3000"
+                    value="3,000€"
                   />
                 </div>
                 <div
@@ -73,7 +77,7 @@ Object {
                     <label
                       class="form-check-label"
                       for="autoSizingCheck2"
-                      style="font-size: 13px;"
+                      style="font-size: 13px; color: rgb(255, 255, 255);"
                     >
                       Furnished
                     </label>
@@ -214,7 +218,9 @@ Object {
     </div>
   </body>,
   "container": <div>
-    <div>
+    <div
+      class="c-container"
+    >
       <div>
         <form
           class="form_container"
@@ -224,12 +230,12 @@ Object {
             class=""
             style="padding: 15px;"
           >
-            <h5
+            <h3
               data-testid="form-title"
-              style="margin-left: 25px;"
+              style="margin-left: 25px; color: rgb(255, 255, 255);"
             >
               Filter bookings by :
-            </h5>
+            </h3>
             <div
               class="align-items-center"
             >
@@ -239,7 +245,7 @@ Object {
                 <input
                   class="form-control"
                   data-testid="dep-input"
-                  placeholder="Department"
+                  placeholder="Department (Ex. Paris...)"
                   type="text"
                   value=""
                 />
@@ -251,8 +257,9 @@ Object {
                   class="form-control"
                   data-testid="price-min"
                   placeholder="Price min"
+                  required=""
                   type="text"
-                  value="0"
+                  value="0€"
                 />
               </div>
               <div
@@ -262,8 +269,9 @@ Object {
                   class="form-control"
                   data-testid="price-max"
                   placeholder="Price max"
+                  required=""
                   type="text"
-                  value="3000"
+                  value="3,000€"
                 />
               </div>
               <div
@@ -282,7 +290,7 @@ Object {
                   <label
                     class="form-check-label"
                     for="autoSizingCheck2"
-                    style="font-size: 13px;"
+                    style="font-size: 13px; color: rgb(255, 255, 255);"
                   >
                     Furnished
                   </label>

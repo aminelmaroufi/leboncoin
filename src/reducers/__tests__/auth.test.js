@@ -2,16 +2,19 @@ import * as types from "../../utils/types";
 import auth from "../auth";
 
 const error_message = "Error from API";
+let initialState;
 
 describe("Reducers", () => {
-  const initialState = {
-    fetching: false,
-    isLoggedIn: null,
-    message: "",
-    error: false,
-    user: null,
-    success: false,
-  };
+  beforeAll(() => {
+    initialState = {
+      fetching: false,
+      isLoggedIn: null,
+      message: "",
+      error: false,
+      user: null,
+      success: false,
+    };
+  });
 
   it("should return the initial state", () => {
     expect(auth(undefined, {})).toEqual(initialState);

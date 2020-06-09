@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Currency from "react-currency-formatter";
+import CurrencyFormat from "react-currency-format";
 import Map from "pigeon-maps";
 import Marker from "pigeon-marker";
 import Overlay from "pigeon-overlay";
+import ReactMediumImg from "react-medium-zoom";
 import { getBookings } from "../actions/dash";
 
 const mapStateToProps = (state, ownProps) => {
@@ -66,28 +68,32 @@ export class Bookings extends Component {
   render() {
     const { query, disabled, selectedBooking } = this.state;
     const { bookings } = this.props;
+
     return (
-      <div>
+      <div className="c-container">
         <div>
           {/*  filter */}
           <form className="form_container" style={{ paddingLeft: "20px" }}>
             <div className="" style={{ padding: "15px" }}>
-              <h5 data-testid="form-title" style={{ marginLeft: "25px" }}>
+              <h3
+                data-testid="form-title"
+                style={{ marginLeft: "25px", color: "#fff" }}
+              >
                 Filter bookings by :
-              </h5>
+              </h3>
               <div className="align-items-center">
                 <div className="input-container">
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Department"
+                    placeholder="Department (Ex. Paris...)"
                     data-testid="dep-input"
                     value={query.dep}
                     onChange={(e) => this._handleChange("dep", e.target.value)}
                   />
                 </div>
                 <div className="input-container">
-                  <input
+                  {/* <input
                     type="text"
                     className="form-control"
                     placeholder="Price min"
@@ -96,10 +102,22 @@ export class Bookings extends Component {
                     onChange={(e) =>
                       this._handleChange("price_min", e.target.value)
                     }
+                  /> */}
+                  <CurrencyFormat
+                    className="form-control"
+                    data-testid="price-min"
+                    placeholder="Price min"
+                    thousandSeparator={true}
+                    suffix={"€"}
+                    value={query.price_min}
+                    onValueChange={(e) =>
+                      this._handleChange("price_min", e.value)
+                    }
+                    required
                   />
                 </div>
                 <div className="input-container">
-                  <input
+                  {/* <input
                     type="text"
                     className="form-control"
                     placeholder="Price max"
@@ -108,6 +126,18 @@ export class Bookings extends Component {
                     onChange={(e) =>
                       this._handleChange("price_max", e.target.value)
                     }
+                  /> */}
+                  <CurrencyFormat
+                    className="form-control"
+                    placeholder="Price max"
+                    data-testid="price-max"
+                    thousandSeparator={true}
+                    suffix={"€"}
+                    value={query.price_max}
+                    onValueChange={(e) =>
+                      this._handleChange("price_max", e.value)
+                    }
+                    required
                   />
                 </div>
                 <div className="input-container" style={{ marginTop: "5px" }}>
@@ -125,7 +155,7 @@ export class Bookings extends Component {
                     <label
                       className="form-check-label"
                       htmlFor="autoSizingCheck2"
-                      style={{ fontSize: "13px" }}
+                      style={{ fontSize: "13px", color: "#fff" }}
                     >
                       Furnished
                     </label>
@@ -180,11 +210,14 @@ export class Bookings extends Component {
           </div>
         </div>
         <div className="img_container">
+          {bookings && bookings.length !== 0 && (
+            <h3>Booking details (click on marker to show details):</h3>
+          )}
           {selectedBooking &&
             selectedBooking.images.length &&
             selectedBooking.images.map((img) => {
               return (
-                <img
+                <ReactMediumImg
                   alt={"test"}
                   style={{ height: "200px", width: "300px" }}
                   src={img}

@@ -7,22 +7,25 @@ import { get_bookings } from "../dash";
 import * as api from "../../api/dash";
 
 const error_message = "Error from API";
-
-afterEach(cleanup);
+let action;
 
 describe("Test Login Request", () => {
   api.getBookings = jest.fn();
 
-  const action = {
-    dep: "paris",
-    price_min: 500,
-    price_max: 1300,
-    furnished: false,
-  };
+  beforeAll(() => {
+    action = {
+      dep: "paris",
+      price_min: 500,
+      price_max: 1300,
+      furnished: false,
+    };
+  });
 
   beforeEach(() => {
     jest.resetAllMocks();
   });
+
+  afterEach(cleanup);
 
   it("should wait for every GET_BOOKINGS action and call get_bookings saga", async () => {
     const res = {

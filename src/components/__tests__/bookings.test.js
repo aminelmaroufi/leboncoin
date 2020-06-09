@@ -3,12 +3,11 @@ import { MemoryRouter as Router, withRouter } from "react-router-dom";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 import { Bookings } from "../Bookings";
 
-afterEach(cleanup);
 const search = jest.fn();
 
-const max_price = "3000",
+const max_price = "3,000€",
   dep = "Paris",
-  price_min_value = "600";
+  price_min_value = "600€";
 
 let renderer,
   form_title,
@@ -35,6 +34,8 @@ describe("BOOKINGS COMPONENTS", () => {
     map = renderer.getByTestId("map-container");
   });
 
+  afterEach(cleanup);
+
   it("should render all form elements", () => {
     expect(form_title).toBeTruthy();
     expect(dep_input).toBeTruthy();
@@ -49,7 +50,7 @@ describe("BOOKINGS COMPONENTS", () => {
   it("should update inputs value and call search event", () => {
     //check form input value is empty for each input
     expect(dep_input.value).toEqual("");
-    expect(min_price_input.value).toEqual("0");
+    expect(min_price_input.value).toEqual("0€");
     expect(max_price_input.value).toEqual(max_price);
     expect(furnished_input.value).toEqual("on");
     expect(button_submit.disabled).toBe(true);
