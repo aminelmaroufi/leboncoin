@@ -16,6 +16,7 @@ let renderer,
   max_price_input,
   furnished_input,
   button_submit,
+  details_title,
   map;
 
 describe("BOOKINGS COMPONENTS", () => {
@@ -31,6 +32,7 @@ describe("BOOKINGS COMPONENTS", () => {
     max_price_input = renderer.getByTestId("price-max");
     furnished_input = renderer.getByTestId("furnished-input");
     button_submit = renderer.getByTestId("submit-btn");
+    details_title = renderer.getByTestId("submit-btn");
     map = renderer.getByTestId("map-container");
   });
 
@@ -44,6 +46,7 @@ describe("BOOKINGS COMPONENTS", () => {
     expect(furnished_input).toBeTruthy();
     expect(button_submit).toBeTruthy();
     expect(map).toBeTruthy();
+    expect(details_title).toBeTruthy();
     expect(renderer).toMatchSnapshot();
   });
 

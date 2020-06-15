@@ -211,7 +211,9 @@ export class Bookings extends Component {
         </div>
         <div className="img_container">
           {bookings && bookings.length !== 0 && (
-            <h3>Booking details (click on marker to show details):</h3>
+            <h3 data-testid="details-title">
+              Booking details (click on marker to show details):
+            </h3>
           )}
           {selectedBooking &&
             selectedBooking.images.length &&

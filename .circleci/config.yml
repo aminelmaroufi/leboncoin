@@ -1,0 +1,42 @@
+version: 2.1
+
+orbs:
+  docker: circleci/docker@0.5.13
+
+jobs:
+  run_tests:
+    working_directory: ~/react-app
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - run:
+          name: update-npm
+          command: "sudo npm install -g npm@latest"
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: npm-install
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: test
+          command: npm test
+
+workflows:
+  version: 2
+  build_deploy:
+    jobs:
+      - run_tests
+      - docker/publish:
+          image: gumshoe/$CIRCLE_PROJECT_REPONAME
+          dockerfile: dockerfile
+          requires:
+            - run_tests
+          filters:
+            branches:
+              only:
+                - master
