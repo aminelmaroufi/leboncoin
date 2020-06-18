@@ -31,12 +31,3 @@ workflows:
   build_deploy:
     jobs:
       - run_tests
-      - docker/publish:
-          image: gumshoe/$CIRCLE_PROJECT_REPONAME
-          dockerfile: dockerfile
-          requires:
-            - run_tests
-          filters:
-            branches:
-              only:
-                - master

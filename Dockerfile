@@ -1,7 +1,5 @@
 FROM node:latest as build
 
-ENV DOCKER_LOGIN test
-
 WORKDIR /app
 
 COPY package.json /app/
