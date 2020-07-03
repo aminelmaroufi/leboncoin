@@ -6,6 +6,7 @@ orbs:
 
 jobs:
   run_tests:
+
     working_directory: ~/react-app
     docker:
       - image: circleci/node:latest
@@ -29,25 +30,24 @@ jobs:
 
           heroku_deploy:
      jobs:
-       - build
-       - heroku/deploy-via-git:
-           requires:
-             - build # only run deploy-via-git job if the build job has completed
-           filters:
-             branches:
-               only: master
+      heroku/deploy-via-git:
+        requires:
+          - build # only run deploy-via-git job if the build job has completed
+        filters:
+          branches:
+            only: master
 
-               workflows:
-  
-                heroku_deploy:
-                  jobs:
-                    - build
-                    - heroku/deploy-via-git:
-                        requires:
-                          - build # only run deploy-via-git job if the build job has completed
-                        filters:
-                          branches:
-                            only: master
+            workflows:
+
+             heroku_deploy:
+               jobs:
+                 - build
+                 - heroku/deploy-via-git:
+                     requires:
+                       - build # only run deploy-via-git job if the build job has completed
+                     filters:
+                       branches:
+                         only: master
   version: 2
   build_deploy:
     jobs:
