@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   docker: circleci/docker@0.5.13
-  heroku: circleci/heroku@x.y
+  # heroku: circleci/heroku@x.y
 
 jobs:
   run_tests:
