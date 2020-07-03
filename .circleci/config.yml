@@ -26,26 +26,24 @@ jobs:
       - run:
           name: test
           command: npm test
-  heroku/deploy-via-git:
-    requires:
-      - build # only run deploy-via-git job if the build job has completed
-    filters:
-      branches:
-        only: master
+  deploy:
+    docker:
+      - image: <docker-image-name-tag>
+    steps:
+      - checkout
+      - run:
+          name: Deploy Master to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
 
-        workflows:
-          heroku_deploy:
-            jobs:
-              - build
-              - heroku/deploy-via-git:
-                  requires:
-                    - build # only run deploy-via-git job if the build job has completed
-                  filters:
-                    branches:
-                      only: master
 workflows:
   version: 2
   build_deploy:
     jobs:
       - run_tests
-      - heroku/deploy-via-git
+      - deploy:
+        requires:
+          - build # only run deploy-via-git job if the build job has completed
+        filters:
+          branches:
+            only: master
