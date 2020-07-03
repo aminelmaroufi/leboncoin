@@ -27,8 +27,16 @@ jobs:
           name: test
           command: npm test
   heroku_deploy:
-    jobs:
-      - heroku/deploy-via-git
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build and push Docker image to Heroku
+          command: |
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
+            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:login
+            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:push -a python-django-starter web
+            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:release -a python-django-starter web
 
 workflows:
   version: 2
