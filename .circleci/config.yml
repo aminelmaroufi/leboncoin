@@ -35,8 +35,8 @@ jobs:
           command: |
             sudo curl https://cli-assets.heroku.com/install.sh | sh
             HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:login
-            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:push -a python-django-starter web
-            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:release -a python-django-starter web
+            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:push -a leboncoin-demo web
+            HEROKU_API_KEY=${HEROKU_TOKEN} heroku container:release -a leboncoin-demo web
 
 workflows:
   version: 2
