@@ -28,7 +28,7 @@ jobs:
           command: npm test
   deploy:
     docker:
-      - image: <docker-image-name-tag>
+      - image: leboncoin-demo
     steps:
       - checkout
       - run:
