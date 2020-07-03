@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   docker: circleci/docker@0.5.13
+  heroku: circleci/heroku@x.y
 
 jobs:
   run_tests:
@@ -26,7 +27,27 @@ jobs:
           name: test
           command: npm test
 
-workflows:
+          heroku_deploy:
+     jobs:
+       - build
+       - heroku/deploy-via-git:
+           requires:
+             - build # only run deploy-via-git job if the build job has completed
+           filters:
+             branches:
+               only: master
+
+               workflows:
+  
+                heroku_deploy:
+                  jobs:
+                    - build
+                    - heroku/deploy-via-git:
+                        requires:
+                          - build # only run deploy-via-git job if the build job has completed
+                        filters:
+                          branches:
+                            only: master
   version: 2
   build_deploy:
     jobs:

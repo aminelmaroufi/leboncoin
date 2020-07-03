@@ -1,9 +1,13 @@
 import React from "react";
-import { MemoryRouter as Router, withRouter } from "react-router-dom";
-import { cleanup, fireEvent, render } from "@testing-library/react";
-import { Bookings } from "../Bookings";
+import { MemoryRouter as Router } from "react-router-dom";
+import { fireEvent, render } from "@testing-library/react";
+import { rerender, act, cleanup } from "@testing-library/react-hooks";
+import Bookings from "../Bookings";
+import { Provider } from "react-redux";
+import configureStore from "../../store";
+import { getBookings } from "../../actions/dash";
 
-const search = jest.fn();
+const store = configureStore();
 
 const max_price = "3,000€",
   dep = "Paris",
@@ -22,9 +26,9 @@ let renderer,
 describe("BOOKINGS COMPONENTS", () => {
   beforeEach(() => {
     renderer = render(
-      <Router>
-        <Bookings onGetBookings={search} />
-      </Router>
+      <Provider store={store}>
+        <Bookings />
+      </Provider>
     );
     form_title = renderer.getByTestId("form-title");
     dep_input = renderer.getByTestId("dep-input");
@@ -68,7 +72,7 @@ describe("BOOKINGS COMPONENTS", () => {
     expect(button_submit.disabled).toBe(false);
 
     fireEvent.click(button_submit);
-    expect(search).toHaveBeenCalled();
-    expect(search).toHaveBeenCalledTimes(1);
+    // expect(store.dispatch).toHaveBeenCalledwith(getBookings);
+    // expect(getBookings).toHaveBeenCalledTimes(1);
   });
 });
