@@ -48,3 +48,4 @@ workflows:
   build_deploy:
     jobs:
       - run_tests
+      - heroku/deploy-via-git
