@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "aphrodite": "^2.4.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "pigeon-maps": "^0.15.0",
     "pigeon-marker": "^0.3.4",
     "pigeon-overlay": "^0.2.3",
